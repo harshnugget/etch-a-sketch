@@ -12,7 +12,7 @@ for (let column = 0; column < GRID_SIZE; column++) {
     for (let row = 0; row < GRID_SIZE; row++) {
         let gridRow = document.createElement("div");
         gridRow.classList.add("grid_row");
-        gridRow.textContent = `${column*16+row+1}`;
+        gridRow.setAttribute("data-value", `${column*16+row+1}`);
         gridColumn.appendChild(gridRow);
     }
 }
