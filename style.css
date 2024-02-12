@@ -1,0 +1,25 @@
+* {
+    box-sizing: border-box;
+}
+
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    height: 500px;
+}
+
+.grid_column {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+
+.grid_row {
+    background-color: aqua;
+    flex: 1;
+}
+
+.grid_row:hover {
+    background-color: red;
+}
