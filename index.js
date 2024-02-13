@@ -1,6 +1,3 @@
-// Initialize color to red
-let currentColor = "rgb(255, 0, 0)";
-
 // Variable for size of grid
 const GRID_SIZE = document.querySelector("#grid-size").value;   //(e.g. a size of 16 would create a 16x16 grid)
 
@@ -60,6 +57,7 @@ function buildGrid(size) {
 function changeColor(event) {
     const target = event.target;
     const color = target.style.backgroundColor;
+    let currentColor = document.querySelector("#color-picker").value;
 
     if (event.buttons === 1) {
         if (color) {
@@ -83,10 +81,17 @@ function changeBrightness(color, target) {
     const decrementAmount = 10;
 
     // Use regex to check if background color is RGB format
-    var rgbRegex = /rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)/;
+    const rgbRegex = /rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)/;
+    const hexRegex = /^[0-9A-Fa-f]+$/;
     if (!rgbRegex.test(color)) {
-        console.log("Invalid color format! Must be RGB.");
-        return;
+        if (hexRegex.test(color)) {
+            // Convert hex value to RGB
+            color = hexToRGB(color);
+        }
+        else {
+            console.log("Color must be RGB or Hex value");
+            return;
+        }
     }
 
     // Get RGB values
@@ -98,4 +103,16 @@ function changeBrightness(color, target) {
     let b = rgbValues[2] > decrementAmount ? rgbValues[2]-decrementAmount : 0;
 
     target.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+}
+
+function hexToRGB(hexValue) {
+    let r = hexValue.slice(1, 3);
+    let g = hexValue.slice(3, 5);
+    let b = hexValue.slice(5, 7);
+
+    r = parseInt(r, 16);
+    g = parseInt(g, 16);
+    b = parseInt(b, 16);
+
+    return `rgb(${r}, ${g}, ${b})`
 }
