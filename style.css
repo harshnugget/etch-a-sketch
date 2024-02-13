@@ -16,13 +16,9 @@
     height: 100%;
 }
 
-.grid-column {
+.grid-column,
+.grid-row{
     display: flex;
-    flex-direction: row;
-    flex: 1;
-}
-
-.grid-row {
     flex: 1;
 }
 
