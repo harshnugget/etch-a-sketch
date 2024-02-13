@@ -1,25 +1,45 @@
 // Initialize color to white
-let currentColor = "rgb(255, 255, 255)";
+let currentColor = "rgb(255, 0, 0)";
 
 // Variable for size of grid
-const GRID_SIZE = 16;   //(e.g. a size of 16 would create a 16x16 grid)
+const GRID_SIZE = document.querySelector("#grid-size").value;   //(e.g. a size of 16 would create a 16x16 grid)
 
-// Select grid container
-const gridContainer = document.querySelector(".grid-container");
+// Select canvas
+const canvas = document.querySelector(".canvas");
 
-// Build grid
-buildGrid(GRID_SIZE);
+// Add event listener to build button
+document.querySelector("#build-button").addEventListener("mousedown", () => {
+    const GRID_SIZE = document.querySelector("#grid-size").value;   //(e.g. a size of 16 would create a 16x16 grid)
+    buildGrid(GRID_SIZE);
+});
 
 function buildGrid(size) {
+    // Handle invalid sizes
+    if (!(size % 16 === 0) || !(size)) {
+        console.log(`Invalid grid size`);
+        return;
+    }
+
+    let gridContainer;
+    
+    // Clear grid
+    if (document.querySelector(".grid-container")) {
+        document.querySelector(".grid-container").remove();
+    }
+
+    gridContainer = document.createElement("div");
+    gridContainer.classList.add("grid-container");
+    canvas.append(gridContainer);
+
     // Create grid columns and rows
     for (let column = 0; column < size; column++) {
         let gridColumn = document.createElement("div");
-        gridColumn.classList.add("grid_column");
+        gridColumn.classList.add("grid-column");
         gridContainer.appendChild(gridColumn);
     
         for (let row = 0; row < size; row++) {
             let gridRow = document.createElement("div");
-            gridRow.classList.add("grid_row");
+            gridRow.classList.add("grid-row");
             gridRow.setAttribute("data-value", `${column*16+row+1}`);
             gridColumn.appendChild(gridRow);
             

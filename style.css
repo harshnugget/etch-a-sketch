@@ -2,22 +2,30 @@
     box-sizing: border-box;
 }
 
-.grid-container {
-    display: flex;
-    flex-direction: column;
+.canvas {
     width: 600px;
     height: 600px;
     border-style: solid;
     user-select: none;
 }
 
-.grid_column {
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.grid-column {
     display: flex;
     flex-direction: row;
     flex: 1;
 }
 
-.grid_row {
-    background-color: rgb(255, 255, 255);
+.grid-row {
     flex: 1;
+}
+
+.testing {
+    background-color: rgb(255, 0, 0);
 }
