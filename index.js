@@ -65,7 +65,7 @@ function changeBrightness(color, target) {
     // Get RGB values
     let rgbValues = color.split("(")[1].replace(")", "").split(",");
 
-    // Decrease RGB values by 10 until 0
+    // Decrease RGB values until 0
     let r = rgbValues[0] > decrementAmount ? rgbValues[0]-decrementAmount : 0;
     let g = rgbValues[1] > decrementAmount ? rgbValues[1]-decrementAmount : 0;
     let b = rgbValues[2] > decrementAmount ? rgbValues[2]-decrementAmount : 0;
