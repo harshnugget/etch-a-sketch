@@ -1,4 +1,4 @@
-// Initialize color to white
+// Initialize color to red
 let currentColor = "rgb(255, 0, 0)";
 
 // Variable for size of grid
@@ -6,6 +6,9 @@ const GRID_SIZE = document.querySelector("#grid-size").value;   //(e.g. a size o
 
 // Select canvas
 const canvas = document.querySelector(".canvas");
+
+// Build grid with default size of 16
+buildGrid(16);
 
 // Add event listener to build button
 document.querySelector("#build-button").addEventListener("mousedown", () => {
@@ -15,8 +18,12 @@ document.querySelector("#build-button").addEventListener("mousedown", () => {
 
 function buildGrid(size) {
     // Handle invalid sizes
-    if (!(size % 16 === 0) || !(size)) {
-        console.log(`Invalid grid size`);
+    if (size <= 0) {
+        console.log("Grid size must be greater than size 0");
+        return;
+    }
+    if (size > 100) {
+        console.log("Grid must be less than size 100");
         return;
     }
 
