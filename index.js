@@ -28,7 +28,7 @@ function buildGrid(size) {
 }
 
 function changeColor(event) {
-    if (event.buttons === 1 || event.type === "mousedown") {
+    if (event.buttons === 1) {
         this.style.backgroundColor = "red";
     }
 }
