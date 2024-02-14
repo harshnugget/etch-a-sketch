@@ -1,11 +1,9 @@
-// Variable for size of grid
 let gridSize = document.querySelector("#grid-size").value;   //(e.g. a size of 16 would create a 16x16 grid)
 
-// Variables for tracking strokes (undo button functionality)
+// Variables for undo button funcionality
 const UNDO_LIMIT = 10;
 const undoArray = [];
 
-// Populate the "strokes" array with empty objects
 for (let i = 0; i < UNDO_LIMIT; i++) {
     undoArray.push({});
 }
@@ -13,35 +11,33 @@ for (let i = 0; i < UNDO_LIMIT; i++) {
 // Variables for redo button functionality
 const redoArray = [];
 
-// Populate the "redoArray" with empty objects
 for (let i = 0; i < UNDO_LIMIT; i++) {
     redoArray.push({});
 }
 
-// Built the grid with default values
+// Build the grid with default values
 buildGrid(gridSize);
 
-// Add event listener to build button
+// Event listeners
 document.querySelector("#build-button").addEventListener("mousedown", () => {
-    let gridSize = document.querySelector("#grid-size").value;
+    gridSize = document.querySelector("#grid-size").value;
     buildGrid(gridSize);
 });
 
-// Add event listener to rainbow button
 const rainbowBtn = document.querySelector("#rainbow-button")
 rainbowBtn.addEventListener("mousedown", toggleTool);
 
-// Add event listener to darken button
 const darkenBtn = document.querySelector("#darken-button")
 darkenBtn.addEventListener("mousedown", toggleTool);
 
-// Add event listener to undo button
+const lightenBtn = document.querySelector("#lighten-button")
+lightenBtn.addEventListener("mousedown", toggleTool);
+
 const undoBtn = document.querySelector("#undo-button");
 undoBtn.addEventListener("mousedown", function() {
     executeUndoRedo("undo");
 });
 
-// Add event listener to redo button
 const redoBtn = document.querySelector("#redo-button");
 redoBtn.addEventListener("mousedown", function() {
     executeUndoRedo("redo");
@@ -98,8 +94,8 @@ function buildGrid(size) {
 let tempStroke = {}; // For storing previous stroke
 function strokeInsert() {
     undoArray.unshift(tempStroke);  // Insert most recent stroke at beginning of array
-    tempStroke = {}; // Empty to make room for next stroke
     undoArray.pop();   // Remove oldest stroke from the end of the array
+    tempStroke = {}; // Empty to make room for next stroke
     document.removeEventListener("mouseup", strokeInsert);
 }
 
@@ -130,29 +126,41 @@ function changeTileColor(event) {
             let b = Math.floor(Math.random() * 256);
             selectedColor = `rgb(${r}, ${g}, ${b})`;
         }
+
         if (darkenBtn.classList.contains("active-tool")) {
-            selectedColor = changeTileBrightness(currentColor, target);
+            selectedColor = changeTileBrightness(currentColor, "dark");
         }
+
+        if (lightenBtn.classList.contains("active-tool")) {
+            selectedColor = changeTileBrightness(currentColor, "light");
+        }
+
         // Apply color
         target.style.backgroundColor = selectedColor;
     }
 }
 
-function changeTileBrightness(color) {        
+function changeTileBrightness(color, type) {        
+    let incrementAmount;
+
     // Define an amount to decrease each RGB value by
-    const decrementAmount = 10;
+    if (type === "dark") {
+        incrementAmount = -10;
+    } else if (type === "light") {
+        incrementAmount = 10;
+    }
 
     // Use regex to check if background color is RGB format
     const rgbRegex = /rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)/;
     const hexRegex = /^[0-9A-Fa-f]+$/;
+    
     if (!rgbRegex.test(color)) {
         if (hexRegex.test(color)) {
             // Convert hex value to RGB
             color = hexToRGB(color);
-        }
-        else {
-            if (!color === null) {
-                console.log("Color must be RGB or Hex value");
+        } else {
+            if (color !== null && color !== "") {
+                console.log("Color must be RGB or Hex value: " + color);
             }
             return;
         }
@@ -161,10 +169,10 @@ function changeTileBrightness(color) {
     // Get RGB values
     let rgbValues = color.split("(")[1].replace(")", "").split(",");
 
-    // Decrease RGB values until 0
-    let r = rgbValues[0] > decrementAmount ? rgbValues[0]-decrementAmount : 0;
-    let g = rgbValues[1] > decrementAmount ? rgbValues[1]-decrementAmount : 0;
-    let b = rgbValues[2] > decrementAmount ? rgbValues[2]-decrementAmount : 0;
+    // Decrease RGB values within the specified range
+    let r = Math.min(255, Math.max(0, +rgbValues[0] + incrementAmount));
+    let g = Math.min(255, Math.max(0, +rgbValues[1] + incrementAmount));
+    let b = Math.min(255, Math.max(0, +rgbValues[2] + incrementAmount));
 
     return `rgb(${r}, ${g}, ${b})`;
 }
@@ -189,6 +197,7 @@ function toggleTool(event) {
             document.querySelector(".active-tool").classList.remove("active-tool");
         }
     }
+
     // Toggle tool as active
     event.target.classList.toggle("active-tool");
     if (!event.target.classList.contains("active-tool")) {
