@@ -3,12 +3,19 @@ let gridSize = document.querySelector("#grid-size").value;   //(e.g. a size of 1
 
 // Variables for tracking strokes (undo button functionality)
 const UNDO_LIMIT = 10;
-const strokes = [];
-let strokeIndex = 0;
+const undoArray = [];
 
 // Populate the "strokes" array with empty objects
 for (let i = 0; i < UNDO_LIMIT; i++) {
-    strokes.push({});
+    undoArray.push({});
+}
+
+// Variables for redo button functionality
+const redoArray = [];
+
+// Populate the "redoArray" with empty objects
+for (let i = 0; i < UNDO_LIMIT; i++) {
+    redoArray.push({});
 }
 
 // Built the grid with default values
@@ -30,9 +37,25 @@ darkenBtn.addEventListener("mousedown", toggleTool);
 
 // Add event listener to undo button
 const undoBtn = document.querySelector("#undo-button");
-undoBtn.addEventListener("mousedown", undo);
+undoBtn.addEventListener("mousedown", function() {
+    executeUndoRedo("undo");
+});
+
+// Add event listener to redo button
+const redoBtn = document.querySelector("#redo-button");
+redoBtn.addEventListener("mousedown", function() {
+    executeUndoRedo("redo");
+});
 
 function buildGrid(size) {
+    // Clear arrays
+    for (let i = 0; i < UNDO_LIMIT; i++) {
+        redoArray.unshift({});
+        undoArray.unshift({});
+        redoArray.pop();
+        undoArray.pop();
+    }
+
     // Handle invalid sizes
     if (size <= 0) {
         console.log("Grid size must be greater than size 0");
@@ -72,11 +95,11 @@ function buildGrid(size) {
 }
 
 // Undo functionality
-let tempStroke = {}; // For storing the most recent stroke
+let tempStroke = {}; // For storing previous stroke
 function strokeInsert() {
-    strokes.unshift(tempStroke);  // Insert most recent stroke at beginning of array
+    undoArray.unshift(tempStroke);  // Insert most recent stroke at beginning of array
     tempStroke = {}; // Empty to make room for next stroke
-    strokes.pop();   // Remove oldest stroke from the end of the array
+    undoArray.pop();   // Remove oldest stroke from the end of the array
     document.removeEventListener("mouseup", strokeInsert);
 }
 
@@ -86,6 +109,12 @@ function changeTileColor(event) {
     let selectedColor = document.querySelector("#color-picker").value;    // Color value of color picker
 
     if (event.buttons === 1) {  // Left mouse button
+        // Clear redoArray
+        for (let i = 0; i < UNDO_LIMIT; i++) {
+            redoArray.unshift({});
+            redoArray.pop();
+        }
+
         // Store the current color of this element in tempStroke object
         if (tempStroke[event.target.getAttribute("data-value")] === undefined) {
             tempStroke[event.target.getAttribute("data-value")] = currentColor;
@@ -167,22 +196,45 @@ function toggleTool(event) {
     }
 }
 
-function undo() {
-    // Assign the previous brush stroke to a variable (undo will apply this stroke)
-    const prevstroke = strokes[0];
+function executeUndoRedo(action) {
+    let sourceArray = [];
+    let destinationArray = [];
+
+    switch (action) {
+        case "redo":
+            sourceArray = redoArray;
+            destinationArray = undoArray;
+            break;
+        case "undo":
+            sourceArray = undoArray;
+            destinationArray = redoArray;
+            break;
+        default:
+            console.error("Invalid action. Use 'undo' or 'redo'.");
+            return;
+    }
+
+    // Define an object to store tile data-values and background colours
+    const stroke = {};
 
     // Handle empty strokes
-    if (Object.keys(prevstroke).length < 1) {
-        console.log("Undo limit reached!")
+    if (Object.keys(sourceArray[0]).length < 1) {
+        console.log("Limit reached!")
         return;
     }
 
-    // Re-paint each tile to it's previous stroke
-    for (const [key, value] of Object.entries(prevstroke)) {
+    for (const [key, value] of Object.entries(sourceArray[0])) {
+        // Store the next stroke to be inserted in redoArray
+        stroke[key] = document.querySelector(`[data-value="${key}"]`).style.backgroundColor;
+        // Re-paint each tile to it's previous stroke
         document.querySelector(`[data-value="${key}"]`).style.backgroundColor = value;
-    }
+    }    
+    
+    // Remove the first stroke from sourceArray
+    sourceArray.shift();
+    sourceArray.push({}); 
 
-    // Remove stroke from array
-    strokes.shift();
-    strokes.push({});
+    // Insert the stroke object into destinationArray
+    destinationArray.unshift(stroke);
+    destinationArray.pop(); 
 }
