@@ -1,5 +1,5 @@
 // Variable for size of grid
-const GRID_SIZE = document.querySelector("#grid-size").value;   //(e.g. a size of 16 would create a 16x16 grid)
+let gridSize = document.querySelector("#grid-size").value;   //(e.g. a size of 16 would create a 16x16 grid)
 
 // Variables for tracking strokes (undo button functionality)
 const UNDO_LIMIT = 10;
@@ -12,11 +12,12 @@ for (let i = 0; i < UNDO_LIMIT; i++) {
 }
 
 // Built the grid with default values
-buildGrid(GRID_SIZE);
+buildGrid(gridSize);
 
 // Add event listener to build button
 document.querySelector("#build-button").addEventListener("mousedown", () => {
-    buildGrid(GRID_SIZE);
+    let gridSize = document.querySelector("#grid-size").value;
+    buildGrid(gridSize);
 });
 
 // Add event listener to rainbow button
