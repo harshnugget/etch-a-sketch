@@ -24,6 +24,11 @@ document.querySelector("#build-button").addEventListener("mousedown", () => {
     buildGrid(gridSize);
 });
 
+// Event listeners
+document.querySelector("#clear-button").addEventListener("mousedown", () => {
+    buildGrid(gridSize);
+});
+
 const eraseBtn = document.querySelector("#erase-button")
 eraseBtn.addEventListener("mousedown", toggleTool);
 
@@ -121,6 +126,9 @@ function changeTileColor(event) {
 
         // Get active tool
         if (eraseBtn.classList.contains("active-tool")) {
+            if (!currentColor) {
+                return;
+            }
             selectedColor = "";
         }
 
@@ -134,7 +142,6 @@ function changeTileColor(event) {
 
         if (darkenBtn.classList.contains("active-tool")) {
             if (!currentColor) {
-                console.log("here");
                 return;
             }
             selectedColor = changeTileBrightness(currentColor, "dark");
