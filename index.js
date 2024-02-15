@@ -18,30 +18,34 @@ for (let i = 0; i < UNDO_LIMIT; i++) {
 // Build the grid with default values
 buildGrid(gridSize);
 
-// Event listeners
 document.querySelector("#build-button").addEventListener("mousedown", () => {
     gridSize = document.querySelector("#grid-size").value;
     buildGrid(gridSize);
 });
 
-// Event listeners
 document.querySelector("#clear-button").addEventListener("mousedown", () => {
     buildGrid(gridSize);
 });
 
-const eraseBtn = document.querySelector("#erase-button")
+// Set color picker value
+const colorPicker = document.querySelector("#color-picker");
+document.querySelector(".color-picker-container").style.backgroundColor = colorPicker.value;
+colorPicker.addEventListener("input", updateFirst);
+colorPicker.addEventListener("input", updateAll);
+
+const eraseBtn = document.querySelector("#erase-button");
 eraseBtn.addEventListener("mousedown", toggleTool);
 
-const blendBtn = document.querySelector("#blend-button")
+const blendBtn = document.querySelector("#blend-button");
 blendBtn.addEventListener("mousedown", toggleTool);
 
-const rainbowBtn = document.querySelector("#rainbow-button")
+const rainbowBtn = document.querySelector("#rainbow-button");
 rainbowBtn.addEventListener("mousedown", toggleTool);
 
-const darkenBtn = document.querySelector("#darken-button")
+const darkenBtn = document.querySelector("#darken-button");
 darkenBtn.addEventListener("mousedown", toggleTool);
 
-const lightenBtn = document.querySelector("#lighten-button")
+const lightenBtn = document.querySelector("#lighten-button");
 lightenBtn.addEventListener("mousedown", toggleTool);
 
 const undoBtn = document.querySelector("#undo-button");
@@ -205,9 +209,9 @@ function blendColors(currentColor, selectedColor) {
     let selectedColorG = +selectedColorRGBValues[1];
     let selectedColorB = +selectedColorRGBValues[2]; 
     
-    r > selectedColorR ? r -= incrementAmount : r += incrementAmount;
-    g > selectedColorG ? g -= incrementAmount : g += incrementAmount;
-    b > selectedColorB ? b -= incrementAmount : b += incrementAmount;
+    r = r > selectedColorR ? Math.max(selectedColorR, r - incrementAmount) : Math.min(selectedColorR, r + incrementAmount);
+    g = g > selectedColorG ? Math.max(selectedColorG, g - incrementAmount) : Math.min(selectedColorG, g + incrementAmount);
+    b = b > selectedColorB ? Math.max(selectedColorB, b - incrementAmount) : Math.min(selectedColorB, b + incrementAmount);
 
     return `rgb(${r}, ${g}, ${b})`;
 }
@@ -251,6 +255,7 @@ function changeTileBrightness(color, type) {
 }
 
 function hexToRGB(hexValue) {
+    
     let r = hexValue.slice(1, 3);
     let g = hexValue.slice(3, 5);
     let b = hexValue.slice(5, 7);
@@ -319,4 +324,20 @@ function executeUndoRedo(action) {
     // Insert the stroke object into destinationArray
     destinationArray.unshift(stroke);
     destinationArray.pop(); 
+}
+
+// Color picker functionality
+// Continuously updates the background color of the color-picker container to match the color-picker
+function updateFirst(event) {
+    const div = document.querySelector(".color-picker-container");
+    if (div) {
+      div.style.backgroundColor = event.target.value;
+    }
+}
+
+// Resorts to previous color value if color-picker is cancelled
+function updateAll(event) {
+    document.querySelectorAll(".color-picker-container").forEach((div) => {
+      div.style.backgroundColor = event.target.value;
+    });
 }
