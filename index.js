@@ -24,6 +24,9 @@ document.querySelector("#build-button").addEventListener("mousedown", () => {
     buildGrid(gridSize);
 });
 
+const eraseBtn = document.querySelector("#erase-button")
+eraseBtn.addEventListener("mousedown", toggleTool);
+
 const rainbowBtn = document.querySelector("#rainbow-button")
 rainbowBtn.addEventListener("mousedown", toggleTool);
 
@@ -92,11 +95,11 @@ function buildGrid(size) {
 
 // Undo functionality
 let tempStroke = {}; // For storing previous stroke
-function strokeInsert() {
+function strokeTracker() {
     undoArray.unshift(tempStroke);  // Insert most recent stroke at beginning of array
     undoArray.pop();   // Remove oldest stroke from the end of the array
     tempStroke = {}; // Empty to make room for next stroke
-    document.removeEventListener("mouseup", strokeInsert);
+    document.removeEventListener("mouseup", strokeTracker);
 }
 
 function changeTileColor(event) {
@@ -114,6 +117,11 @@ function changeTileColor(event) {
         // Store the current color of this element in tempStroke object
         if (tempStroke[event.target.getAttribute("data-value")] === undefined) {
             tempStroke[event.target.getAttribute("data-value")] = currentColor;
+        }
+
+        // Get active tool
+        if (eraseBtn.classList.contains("active-tool")) {
+            selectedColor = "";
         }
 
         if (rainbowBtn.classList.contains("active-tool")) {
@@ -139,8 +147,8 @@ function changeTileColor(event) {
             selectedColor = changeTileBrightness(currentColor, "light");
         }
 
-        // Wait for user to stop drawing before saving stroke
-        document.addEventListener("mouseup", strokeInsert, { once: true });
+        // Wait for user to stop drawing before saving stroke to undo array
+        document.addEventListener("mouseup", strokeTracker, { once: true });
 
         // Apply color
         target.style.backgroundColor = selectedColor;
