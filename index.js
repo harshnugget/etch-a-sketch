@@ -116,9 +116,6 @@ function changeTileColor(event) {
             tempStroke[event.target.getAttribute("data-value")] = currentColor;
         }
 
-        // Wait for user to stop drawing
-        document.addEventListener("mouseup", strokeInsert, { once: true });
-
         if (rainbowBtn.classList.contains("active-tool")) {
             // Randomize rgb values
             let r = Math.floor(Math.random() * 256);
@@ -128,12 +125,22 @@ function changeTileColor(event) {
         }
 
         if (darkenBtn.classList.contains("active-tool")) {
+            if (!currentColor) {
+                console.log("here");
+                return;
+            }
             selectedColor = changeTileBrightness(currentColor, "dark");
         }
 
         if (lightenBtn.classList.contains("active-tool")) {
+            if (!currentColor) {
+                return;
+            }
             selectedColor = changeTileBrightness(currentColor, "light");
         }
+
+        // Wait for user to stop drawing before saving stroke
+        document.addEventListener("mouseup", strokeInsert, { once: true });
 
         // Apply color
         target.style.backgroundColor = selectedColor;
