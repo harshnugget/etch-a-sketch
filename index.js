@@ -32,6 +32,9 @@ document.querySelector("#clear-button").addEventListener("mousedown", () => {
 const eraseBtn = document.querySelector("#erase-button")
 eraseBtn.addEventListener("mousedown", toggleTool);
 
+const blendBtn = document.querySelector("#blend-button")
+blendBtn.addEventListener("mousedown", toggleTool);
+
 const rainbowBtn = document.querySelector("#rainbow-button")
 rainbowBtn.addEventListener("mousedown", toggleTool);
 
@@ -98,15 +101,6 @@ function buildGrid(size) {
     }
 }
 
-// Undo functionality
-let tempStroke = {}; // For storing previous stroke
-function strokeTracker() {
-    undoArray.unshift(tempStroke);  // Insert most recent stroke at beginning of array
-    undoArray.pop();   // Remove oldest stroke from the end of the array
-    tempStroke = {}; // Empty to make room for next stroke
-    document.removeEventListener("mouseup", strokeTracker);
-}
-
 function changeTileColor(event) {
     const target = event.target;
     const currentColor = target.style.backgroundColor;  // Color value of grid tile
@@ -130,6 +124,12 @@ function changeTileColor(event) {
                 return;
             }
             selectedColor = "";
+        }
+
+        if (blendBtn.classList.contains("active-tool")) {
+            if (currentColor) {
+                selectedColor = blendColors(currentColor, selectedColor);
+            }
         }
 
         if (rainbowBtn.classList.contains("active-tool")) {
@@ -161,6 +161,57 @@ function changeTileColor(event) {
         target.style.backgroundColor = selectedColor;
     }
 }
+
+// Undo functionality
+let tempStroke = {}; // For storing previous stroke
+function strokeTracker() {
+    undoArray.unshift(tempStroke);  // Insert most recent stroke at beginning of array
+    undoArray.pop();   // Remove oldest stroke from the end of the array
+    tempStroke = {}; // Empty to make room for next stroke
+    document.removeEventListener("mouseup", strokeTracker);
+}
+
+function blendColors(currentColor, selectedColor) {
+    let incrementAmount = 10;
+
+    // Use regex to check if background color is RGB format
+    const rgbRegex = /rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)/;
+    const hexRegex = /^[0-9A-Fa-f]+$/;
+    
+    if (!rgbRegex.test(currentColor)) {
+        if (hexRegex.test(currentColor)) {
+            // Convert hex value to RGB
+            currentColor = hexToRGB(currentColor);
+        } else {
+            if (currentColor !== null && currentColor !== "") {
+                console.log("Color must be RGB or Hex value: " + currentColor);
+            }
+            return;
+        }
+    }
+
+    // Convert selected color to RGB format
+    selectedColor = hexToRGB(selectedColor);
+    
+    // Get RGB values
+    let currentColorRGBValues = currentColor.split("(")[1].replace(")", "").split(",");
+    let selectedColorRGBValues = selectedColor.split("(")[1].replace(")", "").split(",");
+
+    let r = +currentColorRGBValues[0];
+    let g = +currentColorRGBValues[1];
+    let b = +currentColorRGBValues[2];
+
+    let selectedColorR = +selectedColorRGBValues[0];
+    let selectedColorG = +selectedColorRGBValues[1];
+    let selectedColorB = +selectedColorRGBValues[2]; 
+    
+    r > selectedColorR ? r -= incrementAmount : r += incrementAmount;
+    g > selectedColorG ? g -= incrementAmount : g += incrementAmount;
+    b > selectedColorB ? b -= incrementAmount : b += incrementAmount;
+
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
 
 function changeTileBrightness(color, type) {        
     let incrementAmount;
