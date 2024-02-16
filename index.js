@@ -202,9 +202,6 @@ function strokeTracker() {
 function blendColors(currentColor, selectedColor) {
     let incrementAmount = 10;
 
-    // Convert currentColor to RGB format
-    currentColor = checkColorFormat(currentColor);
-
     // Convert selected color to RGB format
     selectedColor = hexToRGB(selectedColor);
     
@@ -240,9 +237,6 @@ function changeTileBrightness(currentColor, type) {
     } else if (type === "light") {
         incrementAmount = 10;
     }
-    
-    // Convert currentColor to RGB format
-    currentColor = checkColorFormat(currentColor);
 
     // Get RGB values
     let rgbValues = currentColor.split("(")[1].replace(")", "").split(",");
@@ -253,26 +247,6 @@ function changeTileBrightness(currentColor, type) {
     let b = Math.min(255, Math.max(0, +rgbValues[2] + incrementAmount));
 
     return `rgb(${r}, ${g}, ${b})`;
-}
-
-function checkColorFormat(color) {
-    // Use regex to check if background color is RGB format
-    const rgbRegex = /rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)/;
-    const hexRegex = /^[0-9A-Fa-f]+$/;
-
-    if (!rgbRegex.test(color)) {
-        if (hexRegex.test(color)) {
-            // Convert hex value to RGB
-            color = hexToRGB(color);
-        }
-        else {
-            if (color !== null && color !== "") {
-                console.log("Color must be RGB or Hex value: " + color);
-            }
-            return;
-        }
-    }
-    return color;
 }
 
 function hexToRGB(hexValue) {
