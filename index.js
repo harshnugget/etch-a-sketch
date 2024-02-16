@@ -63,6 +63,9 @@ darkenBtn.addEventListener("mousedown", toggleTool);
 const lightenBtn = document.querySelector("#lighten-button");
 lightenBtn.addEventListener("mousedown", toggleTool);
 
+const gridCheckbox = document.querySelector("#grid-checkbox");
+gridCheckbox.addEventListener("change", (e) => turnOnGrid(e.target));
+
 const undoBtn = document.querySelector("#undo-button");
 undoBtn.addEventListener("mousedown", function() {
     executeUndoRedo("undo");
@@ -118,6 +121,12 @@ function buildGrid(size) {
             gridRow.addEventListener("mousedown", changeTileColor);
         }
     }
+
+    // Check if grid checkbox is true or false
+    let gridCheckbox = document.querySelector('#grid-checkbox input[type="checkbox"]');
+     if (gridCheckbox.checked) {
+         turnOnGrid(gridCheckbox);
+     }
 }
 
 function changeTileColor(event) {
@@ -287,14 +296,17 @@ function toggleTool(event) {
 
     if (activeTool && activeTool !== event.target) {
         activeTool.style.backgroundColor = "";
+        activeTool.style.transform = "";
         activeTool.classList.remove("active-tool");
     }
 
     event.target.classList.toggle("active-tool");
     if (event.target.classList.contains("active-tool")) {
         event.target.style.backgroundColor = "rgb(255, 194, 81)";
+        event.target.style.transform = "scale(1.1)";
     } else {
         event.target.style.backgroundColor = "";
+        event.target.style.transform = "";
     }
 }
 
@@ -355,4 +367,20 @@ function updateAll(event) {
     document.querySelectorAll(".color-picker-container").forEach((div) => {
       div.style.backgroundColor = event.target.value;
     });
+}
+
+// Functionality for grid checkbox
+function turnOnGrid(target) {
+    console.log(target);
+    let squares;
+    if (target.checked) {
+        // Turn on grid
+        squares = document.querySelectorAll(".grid-row");
+        squares.forEach(e => e.classList.add("grid"));
+    }
+    else {
+        // Turn off grid
+        squares = document.querySelectorAll(".grid-row");
+        squares.forEach(e => e.classList.remove("grid"));
+    }
 }

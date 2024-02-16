@@ -80,6 +80,7 @@ cursor: pointer;
     border-width: 10px;
     width: 600px;
     height: 600px;
+    aspect-ratio: 1; /* Set the aspect ratio to 1 for a square shape */
     user-select: none;
 }
 
@@ -144,6 +145,10 @@ cursor: pointer;
     height: 100%
 }
 
+#color-picker:hover {
+    cursor: pointer;
+}
+
 /* Button styles */
 .build-clear-buttons-container > button,
 .tools-container > button,
@@ -166,6 +171,7 @@ cursor: pointer;
 .undo-redo-container > button:hover {
     transform: scale(1.1);
     background-color: #c2a179;
+    cursor: pointer;
 }
 
 footer {
@@ -176,8 +182,26 @@ footer {
 }
 
 footer > div {
+    font-size: 14px;
     padding: 20px;
     text-align: center;
     background-color: #a08b9e;
     width: 100%;
+}
+
+.grid {
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0.050);
+}
+
+.show-grid-undo-redo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.grid-checkbox {
+    font-size: 20px;
 }
