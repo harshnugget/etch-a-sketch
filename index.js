@@ -1,3 +1,4 @@
+// Grid size handling
 let gridSize = document.querySelector("#grid-size").value;   //(e.g. a size of 16 would create a 16x16 grid)
 document.querySelector(".slider").value = gridSize;
 document.querySelector("#grid-size").addEventListener("change", (event) => {
@@ -282,17 +283,17 @@ function hexToRGB(hexValue) {
 }
 
 function toggleTool(event) {
-    // Disable current active tool
-    if (!(event.target.classList.contains("active-tool"))) {
-        if (document.querySelector(".active-tool")) {
-            document.querySelector(".active-tool").style.backgroundColor = "";
-            document.querySelector(".active-tool").classList.remove("active-tool");
-        }
+    const activeTool = document.querySelector(".active-tool");
+
+    if (activeTool && activeTool !== event.target) {
+        activeTool.style.backgroundColor = "";
+        activeTool.classList.remove("active-tool");
     }
 
-    // Toggle tool as active
     event.target.classList.toggle("active-tool");
-    if (!event.target.classList.contains("active-tool")) {
+    if (event.target.classList.contains("active-tool")) {
+        event.target.style.backgroundColor = "rgb(255, 194, 81)";
+    } else {
         event.target.style.backgroundColor = "";
     }
 }

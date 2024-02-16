@@ -15,19 +15,21 @@
         <input type="range" min="1" max="100" class="slider" id="myRange">
       </div>
       <input type="text" id="grid-size" name="grid-size"  title="Must be a value between 1-100" size="1" value="16"/>
-      <button type="button" id="build-button">Build</button>
-      <button type="button" id="clear-button">Clear</button>
+      <div class="build-clear-buttons-container">
+        <button type="button" id="build-button">Build</button>
+        <button type="button" id="clear-button">Clear</button>
+      </div>
     </div>
     <div class="canvas-and-tools-container">
      <div class="tools-container">
+      <div class="color-picker-container">
+        <input type="color" id="color-picker" name="color-picker" value="#000000" />
+      </div>
         <button type="button" id="blend-button">Blend</button>
         <button type="button" id="rainbow-button">Rainbow</button>
-        <button type="button" id="darken-button">Darken</button>
         <button type="button" id="lighten-button">Lighten</button>
-        <button type="button" id="erase-button">Erase</button>
-        <div class="color-picker-container">
-          <input type="color" id="color-picker" name="color-picker" value="#000000" />
-        </div>
+        <button type="button" id="darken-button">Darken</button>
+        <button type="button" id="erase-button">Eraser</button>
       </div>
       <div class="canvas"></div>    
       <div class="undo-redo-container">
@@ -35,6 +37,9 @@
         <button type="button" id="redo-button">Redo</button>
       </div> 
     </div>
+    <footer>
+      <div>The Odin Project</div>
+    </footer>
 	<script src="index.js"></script>
   </body>
 </html>
