@@ -1,4 +1,5 @@
 let gridSize = document.querySelector("#grid-size").value;   //(e.g. a size of 16 would create a 16x16 grid)
+document.querySelector(".slider").value = gridSize;
 document.querySelector("#grid-size").addEventListener("change", (event) => {
     if (event.target.value < 1) {
         event.target.value = 1;
@@ -6,6 +7,11 @@ document.querySelector("#grid-size").addEventListener("change", (event) => {
     if (event.target.value > 100) {
         event.target.value = 100;
     }
+    document.querySelector(".slider").value = event.target.value;
+});
+
+document.querySelector(".slider").addEventListener("input", (event) => {
+    document.querySelector("#grid-size").value = event.target.value;
 });
 
 // Variables for undo button funcionality
