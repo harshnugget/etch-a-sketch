@@ -123,7 +123,7 @@ function buildGrid(size) {
     }
 
     // Check if grid checkbox is true or false
-    let gridCheckbox = document.querySelector('#grid-checkbox input[type="checkbox"]');
+    let gridCheckbox = document.querySelector('#grid-checkbox');
      if (gridCheckbox.checked) {
          turnOnGrid(gridCheckbox);
      }
@@ -162,10 +162,10 @@ function changeTileColor(event) {
 
         if (rainbowBtn.classList.contains("active-tool")) {
             // Randomize rgb values
-            let r = Math.floor(Math.random() * 256);
-            let g = Math.floor(Math.random() * 256);
-            let b = Math.floor(Math.random() * 256);
-            selectedColor = `rgb(${r}, ${g}, ${b})`;
+            let randomR = Math.floor(Math.random() * 256);
+            let randomG = Math.floor(Math.random() * 256);
+            let randomB = Math.floor(Math.random() * 256);
+            selectedColor = `rgb(${randomR}, ${randomG}, ${randomB})`;
         }
 
         if (darkenBtn.classList.contains("active-tool")) {
@@ -202,21 +202,8 @@ function strokeTracker() {
 function blendColors(currentColor, selectedColor) {
     let incrementAmount = 10;
 
-    // Use regex to check if background color is RGB format
-    const rgbRegex = /rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)/;
-    const hexRegex = /^[0-9A-Fa-f]+$/;
-    
-    if (!rgbRegex.test(currentColor)) {
-        if (hexRegex.test(currentColor)) {
-            // Convert hex value to RGB
-            currentColor = hexToRGB(currentColor);
-        } else {
-            if (currentColor !== null && currentColor !== "") {
-                console.log("Color must be RGB or Hex value: " + currentColor);
-            }
-            return;
-        }
-    }
+    // Convert currentColor to RGB format
+    currentColor = checkColorFormat(currentColor);
 
     // Convert selected color to RGB format
     selectedColor = hexToRGB(selectedColor);
@@ -225,23 +212,26 @@ function blendColors(currentColor, selectedColor) {
     let currentColorRGBValues = currentColor.split("(")[1].replace(")", "").split(",");
     let selectedColorRGBValues = selectedColor.split("(")[1].replace(")", "").split(",");
 
-    let r = +currentColorRGBValues[0];
-    let g = +currentColorRGBValues[1];
-    let b = +currentColorRGBValues[2];
+    // Get each RGB value
+    let currentColorR = +currentColorRGBValues[0];
+    let currentColorG = +currentColorRGBValues[1];
+    let currentColorB = +currentColorRGBValues[2];
 
     let selectedColorR = +selectedColorRGBValues[0];
     let selectedColorG = +selectedColorRGBValues[1];
     let selectedColorB = +selectedColorRGBValues[2]; 
     
-    r = r > selectedColorR ? Math.max(selectedColorR, r - incrementAmount) : Math.min(selectedColorR, r + incrementAmount);
-    g = g > selectedColorG ? Math.max(selectedColorG, g - incrementAmount) : Math.min(selectedColorG, g + incrementAmount);
-    b = b > selectedColorB ? Math.max(selectedColorB, b - incrementAmount) : Math.min(selectedColorB, b + incrementAmount);
+     // Compare and blend RGB values
+    let r = currentColorR > selectedColorR ? Math.max(selectedColorR, currentColorR - incrementAmount) : Math.min(selectedColorR, currentColorR + incrementAmount);
+    let g = currentColorG > selectedColorG ? Math.max(selectedColorG, currentColorG - incrementAmount) : Math.min(selectedColorG, currentColorG + incrementAmount);
+    let b = currentColorB > selectedColorB ? Math.max(selectedColorB, currentColorB - incrementAmount) : Math.min(selectedColorB, currentColorB + incrementAmount);
 
+   // Construct and return the blended color in RGB format
     return `rgb(${r}, ${g}, ${b})`;
 }
 
 
-function changeTileBrightness(color, type) {        
+function changeTileBrightness(currentColor, type) {        
     let incrementAmount;
 
     // Define an amount to decrease each RGB value by
@@ -250,25 +240,12 @@ function changeTileBrightness(color, type) {
     } else if (type === "light") {
         incrementAmount = 10;
     }
-
-    // Use regex to check if background color is RGB format
-    const rgbRegex = /rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)/;
-    const hexRegex = /^[0-9A-Fa-f]+$/;
     
-    if (!rgbRegex.test(color)) {
-        if (hexRegex.test(color)) {
-            // Convert hex value to RGB
-            color = hexToRGB(color);
-        } else {
-            if (color !== null && color !== "") {
-                console.log("Color must be RGB or Hex value: " + color);
-            }
-            return;
-        }
-    }
+    // Convert currentColor to RGB format
+    currentColor = checkColorFormat(currentColor);
 
     // Get RGB values
-    let rgbValues = color.split("(")[1].replace(")", "").split(",");
+    let rgbValues = currentColor.split("(")[1].replace(")", "").split(",");
 
     // Decrease RGB values within the specified range
     let r = Math.min(255, Math.max(0, +rgbValues[0] + incrementAmount));
@@ -276,6 +253,26 @@ function changeTileBrightness(color, type) {
     let b = Math.min(255, Math.max(0, +rgbValues[2] + incrementAmount));
 
     return `rgb(${r}, ${g}, ${b})`;
+}
+
+function checkColorFormat(color) {
+    // Use regex to check if background color is RGB format
+    const rgbRegex = /rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)/;
+    const hexRegex = /^[0-9A-Fa-f]+$/;
+
+    if (!rgbRegex.test(color)) {
+        if (hexRegex.test(color)) {
+            // Convert hex value to RGB
+            color = hexToRGB(color);
+        }
+        else {
+            if (color !== null && color !== "") {
+                console.log("Color must be RGB or Hex value: " + color);
+            }
+            return;
+        }
+    }
+    return color;
 }
 
 function hexToRGB(hexValue) {
