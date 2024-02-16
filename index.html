@@ -9,26 +9,32 @@
   </head>
   <body>
     <h1>Etch-a-Sketch</h1>
-    <div class="input-container">
-        <label for="grid-size">Grid size:</label>
-        <input type="text" id="grid-size" name="grid-size" size="1" value="16"/>
-        <button type="button" id="build-button">Build</button>
-        <button type="button" id="clear-button">Clear</button>
+    <div class="grid-building-container">
+      <label for="grid-size">Grid size:</label>
+      <input type="text" id="grid-size" name="grid-size"  title="Must be a value between 1-100" size="1" value="16"/><span>Here is my title</span>
+      <button type="button" id="build-button">Build</button>
+      <button type="button" id="clear-button">Clear</button>
+    </div>
+    <div class="canvas-and-tools-container">
+     <div class="tools-container">
+        <button type="button" id="blend-button">Blend</button>
+        <button type="button" id="rainbow-button">Rainbow</button>
+        <button type="button" id="darken-button">Darken</button>
+        <button type="button" id="lighten-button">Lighten</button>
+        <button type="button" id="erase-button">Erase</button>
         <div class="color-picker-container">
-            <input type="color" id="color-picker" name="color-picker" value="#000000" />
+          <input type="color" id="color-picker" name="color-picker" value="#000000" />
         </div>
-
-        <div class="tools">
-          <button type="button" id="erase-button">Erase</button>
-          <button type="button" id="blend-button">Blend</button>
-          <button type="button" id="rainbow-button">Rainbow</button>
-          <button type="button" id="darken-button">Darken</button>
-          <button type="button" id="lighten-button">Lighten</button>
-        </div>
+      </div>
+      <div class="canvas"></div>    
+      <div class="undo-redo-container">
         <button type="button" id="undo-button">Undo</button>
         <button type="button" id="redo-button">Redo</button>
+      </div> 
     </div>
-    <div class="canvas"></div>
+    <div class="slider">
+      
+    </div>
 	<script src="index.js"></script>
   </body>
 </html>

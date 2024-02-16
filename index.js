@@ -1,4 +1,12 @@
 let gridSize = document.querySelector("#grid-size").value;   //(e.g. a size of 16 would create a 16x16 grid)
+document.querySelector("#grid-size").addEventListener("change", (event) => {
+    if (event.target.value < 1) {
+        event.target.value = 1;
+    }
+    if (event.target.value > 100) {
+        event.target.value = 100;
+    }
+});
 
 // Variables for undo button funcionality
 const UNDO_LIMIT = 10;
