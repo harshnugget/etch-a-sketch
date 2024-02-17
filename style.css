@@ -22,6 +22,7 @@ body > h1 {
     color: #a08b9e;
     -webkit-text-stroke-width: 1.5px;
     -webkit-text-stroke-color: #574c56;
+    user-select: none;
 }
 
 .grid-building-container {
@@ -179,6 +180,7 @@ cursor: pointer;
     background-color: #d7b791;
     font-size: 16px;
     transition: transform .2s;
+    user-select: none;
 }
 
 .build-clear-buttons-container > button:hover,
