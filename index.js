@@ -1,3 +1,9 @@
+// Remove non-numeric characters from grid-size input box
+function validateNumericInput(input) {
+    // Remove non-numeric characters from grid-size input box
+    input.value = input.value.replace(/[^0-9]/g, '');
+  }
+
 // Grid size handling
 let gridSize = document.querySelector("#grid-size").value;   //(e.g. a size of 16 would create a 16x16 grid)
 document.querySelector(".slider").value = gridSize;
