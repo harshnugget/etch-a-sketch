@@ -1,6 +1,5 @@
 // Remove non-numeric characters from grid-size input box
 function validateNumericInput(input) {
-    // Remove non-numeric characters from grid-size input box
     input.value = input.value.replace(/[^0-9]/g, '');
   }
 
@@ -70,7 +69,7 @@ const lightenBtn = document.querySelector("#lighten-button");
 lightenBtn.addEventListener("mousedown", toggleTool);
 
 const gridCheckbox = document.querySelector("#grid-checkbox");
-gridCheckbox.addEventListener("change", (e) => turnOnGrid(e.target));
+gridCheckbox.addEventListener("change", (e) => toggleGrid(e.target));
 
 const undoBtn = document.querySelector("#undo-button");
 undoBtn.addEventListener("mousedown", function() {
@@ -131,7 +130,7 @@ function buildGrid(size) {
     // Check if grid checkbox is true or false
     let gridCheckbox = document.querySelector('#grid-checkbox');
      if (gridCheckbox.checked) {
-         turnOnGrid(gridCheckbox);
+         toggleGrid(gridCheckbox);
      }
 }
 
@@ -347,8 +346,7 @@ function updateAll(event) {
 }
 
 // Functionality for grid checkbox
-function turnOnGrid(target) {
-    console.log(target);
+function toggleGrid(target) {
     let squares;
     if (target.checked) {
         // Turn on grid
